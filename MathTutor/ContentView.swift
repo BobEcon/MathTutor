@@ -33,6 +33,7 @@ struct ContentView: View {
             .font(.system(size: 80)).lineLimit(2)
             .minimumScaleFactor(0.5)
             .multilineTextAlignment(.center)
+            .animation(.default, value: answerText)
 //            .border(Color.gray, width: 1)
             .frame(height: 300)
             
@@ -41,19 +42,20 @@ struct ContentView: View {
             
                 Text("\(firstNumber) + \(secondNumber) = ")
                 .font(.largeTitle)
+                .animation(.default, value: answerText)
          
            TextField("", text: $guessedNumber)
                .textFieldStyle(.roundedBorder)
-               .frame(width: 50)
+               .frame(width: 60)
                .overlay {
                    RoundedRectangle(cornerRadius: 5)
-                       .stroke(Color.gray, lineWidth: 1)
+                       .stroke(Color.gray, lineWidth: 2)
                }
                .font(.title)
                .multilineTextAlignment(.center)
                .keyboardType(.numberPad)
                .onChange(of: guessedNumber) {
-                   guessedNumber = guessedNumber.trimmingCharacters(in: .letters).trimmingCharacters(in: .punctuationCharacters).trimmingCharacters(in: .symbols)
+                   guessedNumber = guessedNumber.trimmingCharacters(in: .decimalDigits.inverted)
                    buttonDisabled = guessedNumber.isEmpty
 
                }
@@ -72,18 +74,14 @@ struct ContentView: View {
             Spacer()
         
             if playAgainSeen {
-                if answerText == "Correct!" {
+               
                     Text(answerText)
                         .font(.largeTitle)
-                        .foregroundStyle(.green)
-                        .fontWeight(.heavy)
-                } else {
-                    Text(answerText)
-                        .font(.largeTitle)
-                        .foregroundStyle(.red)
-                        .fontWeight(.heavy)
+                        .foregroundStyle(answerText == "Correct!" ? .green : .red)
+                        .fontWeight(.black)
                         .multilineTextAlignment(.center)
-                }
+//                        .animation(.default, value: answerText)
+                
                 Button("Play Again?") {
                     //TODO:
                     guessedNumber = ""
@@ -96,7 +94,7 @@ struct ContentView: View {
                     secondNumText = String(repeating: emojis.randomElement()!, count: secondNumber)
                 }
             }
-            
+        
 //            Spacer()
             
         }
